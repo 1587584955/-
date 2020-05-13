@@ -1,0 +1,57 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>商城高并发抢单-商品列表</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <!--<link rel="stylesheet" th:href="@{/css/bootstrap.min.css}" >-->
+    <!--<link rel="stylesheet" th:href="@{/css/bootstrap-theme.min.css}" >-->
+    <!--<script type="text/javascript" th:src="@{/js/bootstrap.min.js}"></script>-->
+    <script src="static/jquery/jquery-3.3.1.min.js" ></script>
+    <link rel="stylesheet" href="css/bootstrap.min.css" >
+    <link rel="stylesheet" href="css/bootstrap-theme.min.css" >
+    <script  src="static/js/bootstrap.min.js" type="text/javascript"></script>
+
+
+
+</head>
+<body>
+<div class="container">
+    <div class="panel panel-default">
+        <div class="panel-heading text-center">
+            <h2>商城高并发抢单-秒杀商品列表</h2>
+        </div>
+
+        <div class="panel-body">
+            <table class="table table-hover" border="1px">
+                <thead>
+                <tr>
+                    <td style="font-size: 15px"><strong style="color: red">商品名称</strong></td>
+                    <td style="font-size: 15px"><strong style="color: red">剩余数量</strong></td>
+                    <td style="font-size: 15px"><strong style="color: red">开始时间</strong></td>
+                    <td style="font-size: 15px"><strong style="color: red">结束时间</strong></td>
+                    <td style="font-size: 15px"><strong style="color: red">查看详情</strong></td>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="u : ${list}">
+                    <td th:text="${u.itemName}"></td>
+                    <td th:text="${u.total}"></td>
+                    <td th:text="${#dates.format(u.startTime,'yyyy-MM-dd HH:mm:ss')}"></td>
+                    <td th:text="${#dates.format(u.endTime,'yyyy-MM-dd HH:mm:ss')}"></td>
+                    <td th:if="${u.canKill == 1}">
+                        <a class="btn btn-info" href="${ctx}/item/detail/${item.id}" target="_blank">详情</a>
+                    </td>
+                    <td th:if="${u.canKill == 0}">
+                        <a class="btn btn-info">哈哈~商品已抢购完毕或者不在抢购时间段哦!</a>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+
+</body>
+
+</html>
