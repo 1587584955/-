@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import seu.hy.killmall.pojo.ItemKill;
 import seu.hy.killmall.service.IItemService;
@@ -25,9 +26,24 @@ public class ItemController {
             List<ItemKill> killItems = itemService.getKillItems();
             model.addAttribute("list",killItems);
         }catch (Exception e){
-            System.out.println(e);
+            return "redirect:base/error";
         }
 
         return  "list";
+    }
+    @RequestMapping(value = "detail/{id}")
+    public String detail(@PathVariable(name="id") Integer id,Model model){
+        if(id==null){
+            return "redirect:base/error";
+        }else {
+            try{
+                ItemKill killDetail = itemService.getKillDetail(id);
+                model.addAttribute("detail",killDetail);
+                return "info";
+            }catch (Exception e){
+                System.out.println(e);
+                return "redirect:base/error";
+            }
+        }
     }
 }

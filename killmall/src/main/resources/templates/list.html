@@ -39,7 +39,7 @@
                     <td th:text="${#dates.format(u.startTime,'yyyy-MM-dd HH:mm:ss')}"></td>
                     <td th:text="${#dates.format(u.endTime,'yyyy-MM-dd HH:mm:ss')}"></td>
                     <td th:if="${u.canKill == 1}">
-                        <a class="btn btn-info" href="${ctx}/item/detail/${item.id}" target="_blank">详情</a>
+                        <a class="btn btn-info" th:href="'/detail/'+${u.id}  "  target="_blank">详情</a>
                     </td>
                     <td th:if="${u.canKill == 0}">
                         <a class="btn btn-info">哈哈~商品已抢购完毕或者不在抢购时间段哦!</a>

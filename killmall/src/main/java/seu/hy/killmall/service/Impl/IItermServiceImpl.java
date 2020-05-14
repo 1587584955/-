@@ -21,6 +21,6 @@ public class IItermServiceImpl implements IItemService {
 
     @Override
     public ItemKill getKillDetail(Integer id) throws Exception {
-        return null;
+        return itemKillMapper.selectById(id);
     }
 }
