@@ -4,6 +4,7 @@ package seu.hy.killmall.mapper;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.Update;
 import org.springframework.stereotype.Repository;
 import seu.hy.killmall.pojo.ItemKill;
 import java.util.List;
@@ -25,6 +26,7 @@ public interface ItemKillMapper {
             "    WHERE a.is_active = 1 AND a.id=#{id};")
     ItemKill selectById(@Param("id") Integer id);
 
+    @Update("  UPDATE item_kill SET total = total - 1 WHERE id = #{killId}")
     int updateKillItem(@Param("killId") Integer killId);
 
     ItemKill selectByIdV2(@Param("id") Integer id);
