@@ -48,12 +48,12 @@ public class KillController {
         }
         return bs;
     }
-
+   //抢购成功跳转页面
     @RequestMapping(value = {"success"},method = RequestMethod.GET)
     public String executesuccess(){
         return "executesuccess";
     }
-
+   //抢购失败跳转页面
     @RequestMapping(value={"fail"},method = RequestMethod.GET)
     public String executefail(String msg, Model model){
         model.addAttribute("msg",msg);
