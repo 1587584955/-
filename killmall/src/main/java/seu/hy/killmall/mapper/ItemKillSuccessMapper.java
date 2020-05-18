@@ -1,6 +1,7 @@
 package seu.hy.killmall.mapper;
 
 
+import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
@@ -15,6 +16,7 @@ public interface ItemKillSuccessMapper {
 
     int insert(ItemKillSuccess record);
 
+    @Insert("insert into item_kill_success(code,item_id,kill_id,user_id,status,create_time) values(#{code},#{itemId},#{killId},#{userId},#{status},#{createTime})")
     int insertSelective(ItemKillSuccess record);
 
     ItemKillSuccess selectByPrimaryKey(String code);

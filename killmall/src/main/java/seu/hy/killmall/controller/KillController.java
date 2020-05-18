@@ -1,15 +1,13 @@
 package seu.hy.killmall.controller;
 
 
+import com.alibaba.fastjson.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 import seu.hy.killmall.enums.StatusCode;
 import seu.hy.killmall.pojo.KillDto;
 import seu.hy.killmall.respones.BaseResponse;
@@ -24,20 +22,21 @@ public class KillController {
     @Autowired
     private KillService killService;
 
-    @RequestMapping(value = "/execyte",method = RequestMethod.POST,consumes = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @RequestMapping(value ="/execute",method = RequestMethod.POST,consumes = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @ResponseBody
-    public BaseResponse execute(@RequestParam @Validated KillDto killDto, BindingResult result, HttpSession session){
+    public BaseResponse execute(@RequestBody @Validated KillDto killDto, BindingResult result, HttpSession session){
         //首先校验参数是否合法 ,不合法返回无效参数
         if(result.hasErrors()||killDto.getKillId()<=0){
             return new BaseResponse(StatusCode.InvalidParams);
         }
         //然后校验用户是否登录
-        Object uid=session.getAttribute("uid");
-        if(uid==null){
-            return new BaseResponse(StatusCode.UserNotLogin);
-        }
+//        Object uid=session.getAttribute("uid");
+//        if(uid==null){
+//            return new BaseResponse(StatusCode.UserNotLogin);
+//        }
         //然后才校验用户是否抢购成功
         BaseResponse bs= new BaseResponse(StatusCode.Success);
+        System.out.println("1");
         try{
             Boolean res=killService.killitem(killDto.getKillId(),killDto.getUserId());
             if (!res){
@@ -48,4 +47,5 @@ public class KillController {
         }
         return bs;
     }
+
 }

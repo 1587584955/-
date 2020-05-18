@@ -9,12 +9,10 @@ import org.springframework.web.bind.annotation.RequestMethod;
 @Controller
 @RequestMapping("/base")
 public class BaseController {
-
       @GetMapping("index")
       public String index(){
           return "index";
       }
-
       @RequestMapping(value = "error",method = RequestMethod.GET)
       public String error(){
           return "error";
