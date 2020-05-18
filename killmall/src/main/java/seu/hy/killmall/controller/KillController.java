@@ -5,6 +5,7 @@ import com.alibaba.fastjson.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -46,6 +47,17 @@ public class KillController {
             return new BaseResponse(StatusCode.Fail.getCode(),e.getMessage());
         }
         return bs;
+    }
+
+    @RequestMapping(value = {"success"},method = RequestMethod.GET)
+    public String executesuccess(){
+        return "executesuccess";
+    }
+
+    @RequestMapping(value={"fail"},method = RequestMethod.GET)
+    public String executefail(String msg, Model model){
+        model.addAttribute("msg",msg);
+        return "executefail";
     }
 
 }

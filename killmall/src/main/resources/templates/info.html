@@ -20,11 +20,11 @@
                     dataType: "json",
                     success: function(res){
                         if (res.code==0) {
-                            //alert(res.msg);
-                            window.location.href="/base/index"
+                            alert(res.msg);
+                            window.location.href="/kill/success"
                         }else{
-                            //alert(res.msg);
-                            window.location.href="/base/error"
+                            alert(res.msg);
+                            window.location.href="/kill/fail?msg="+res.msg
                         }
                     },
                     error: function (message) {
@@ -38,9 +38,6 @@
                         "killId":killId,
                         "userId":2,
                     };
-                    // var data = {
-                    //     "killId":killId
-                    // };
                     return data;
                 }
             })
