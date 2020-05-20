@@ -8,6 +8,7 @@ import seu.hy.killmall.mapper.ItemKillMapper;
 import seu.hy.killmall.mapper.ItemKillSuccessMapper;
 import seu.hy.killmall.pojo.ItemKill;
 import seu.hy.killmall.pojo.ItemKillSuccess;
+import seu.hy.killmall.service.EmailSenderService;
 import seu.hy.killmall.service.KillService;
 import seu.hy.killmall.utils.SnowFlake;
 
@@ -19,6 +20,9 @@ public class KillServiceImpl implements KillService {
 
     @Autowired
     private ItemKillMapper itemKillMapper;
+
+    @Autowired
+    private EmailSenderService emailSenderService;
 
     SnowFlake snowFlake=new SnowFlake(2,3);
 
@@ -59,7 +63,10 @@ public class KillServiceImpl implements KillService {
         entry.setKillId(kill.getId());
         entry.setStatus(SysConstant.OrderStatus.SuccessNotPayed.getCode().byteValue());
         System.out.println(entry);
-        itemKillSuccessMapper.insertSelective(entry);
+        int res = itemKillSuccessMapper.insertSelective(entry);
+        if(res>0){
+            emailSenderService.senderKillSuccessEmail(orderNo);
+        }
     }
 
 

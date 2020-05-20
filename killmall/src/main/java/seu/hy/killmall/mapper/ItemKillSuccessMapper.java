@@ -6,7 +6,9 @@ import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
 import org.springframework.stereotype.Repository;
+import org.springframework.stereotype.Service;
 import seu.hy.killmall.pojo.ItemKillSuccess;
+import seu.hy.killmall.pojo.KillSuccessUserInfo;
 
 import java.util.List;
 @Mapper
@@ -29,7 +31,18 @@ public interface ItemKillSuccessMapper {
             "WHERE user_id = #{userId} AND kill_id = #{killId} AND `status` IN (0)")
     int countByKillUserId(@Param("killId") Integer killId, @Param("userId") Integer userId);
 
-//    KillSuccessUserInfo selectByCode(@Param("code") String code);
+    @Select(" SELECT\n" +
+            "      a.*,\n" +
+            "      b.user_name,\n" +
+            "      b.phone,\n" +
+            "      b.email,\n" +
+            "      c.name AS itemName\n" +
+            "    FROM item_kill_success AS a\n" +
+            "      LEFT JOIN user b ON b.id = a.user_id\n" +
+            "      LEFT JOIN item c ON c.id = a.item_id\n" +
+            "    WHERE a.code = #{code}\n" +
+            "          AND b.is_active = 1")
+    KillSuccessUserInfo selectByCode(@Param("code") String code);
 
     int expireOrder(@Param("code") String code);
 
