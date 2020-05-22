@@ -48,5 +48,6 @@ public interface ItemKillSuccessMapper {
             "    WHERE code = #{code} AND status = 0")
     int expireOrder(@Param("code") String code);
 
+    @Select("SELECT a.*,TIMESTAMPDIFF(MINUTE,a.create_time,NOW()) AS difftime  FROM item_kill_success AS a  WHERE a.`status`=0;")
     List<ItemKillSuccess> selectExpireOrders();
 }
