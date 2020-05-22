@@ -1,10 +1,7 @@
 package seu.hy.killmall.mapper;
 
 
-import org.apache.ibatis.annotations.Insert;
-import org.apache.ibatis.annotations.Mapper;
-import org.apache.ibatis.annotations.Param;
-import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.*;
 import org.springframework.stereotype.Repository;
 import org.springframework.stereotype.Service;
 import seu.hy.killmall.pojo.ItemKillSuccess;
@@ -21,6 +18,8 @@ public interface ItemKillSuccessMapper {
     @Insert("insert into item_kill_success(code,item_id,kill_id,user_id,status,create_time) values(#{code},#{itemId},#{killId},#{userId},#{status},#{createTime})")
     int insertSelective(ItemKillSuccess record);
 
+    @Insert("select  code, item_id, kill_id, user_id, status, create_time  from item_kill_success\n" +
+            "    where code = #{code}")
     ItemKillSuccess selectByPrimaryKey(String code);
 
     int updateByPrimaryKeySelective(ItemKillSuccess record);
@@ -44,6 +43,9 @@ public interface ItemKillSuccessMapper {
             "          AND b.is_active = 1")
     KillSuccessUserInfo selectByCode(@Param("code") String code);
 
+    @Update(" UPDATE item_kill_success\n" +
+            "    SET status = -1\n" +
+            "    WHERE code = #{code} AND status = 0")
     int expireOrder(@Param("code") String code);
 
     List<ItemKillSuccess> selectExpireOrders();

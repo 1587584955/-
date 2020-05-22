@@ -1,5 +1,6 @@
 package seu.hy.killmall.config;
 
+import com.google.common.collect.Maps;
 import org.springframework.amqp.core.*;
 import org.springframework.amqp.rabbit.config.SimpleRabbitListenerContainerFactory;
 import org.springframework.amqp.rabbit.connection.CachingConnectionFactory;
@@ -11,6 +12,8 @@ import org.springframework.boot.autoconfigure.amqp.SimpleRabbitListenerContainer
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.env.Environment;
+
+import java.util.Map;
 
 //通用化的rabbitmq配置
 @Configuration
@@ -96,4 +99,65 @@ public class RabbitmqConfig {
     }
 
 
+    //构建秒杀成功后-订单超时未支付的死信队列消息模型
+    /**
+     * 死信队列由死信交换机、死信路由和TTL-存活时间组成（属性）
+     * 将死信交换机绑定到基本交换机和基本路由上
+     * 再将真正的消息队列绑定到死信交换机上
+     * 首先将消息通过基本路发送到基本交换机上，在存到死信队列上，等到存活时间超过阈值
+     * 就将将死信队列上的消息通过死信路由死信交换机发送到真正队列上
+     * 消费者监听真正队列，获取超过ttl的消息
+     * */
+    //构建死信队列模型
+    @Bean
+    public Queue successKillDeadQueue(){
+        Map<String,Object> argsMap= Maps.newHashMap();
+        //死信队列绑定死信交换机
+//      argsMap.put("x-dead-letter-exchange",env.getProperty("mq.kill.item.success.kill.dead.exchange"));
+        argsMap.put("x-dead-letter-exchange",env.getProperty("mq.kill.item.success.kill.dead.exchange"));
+        argsMap.put("x-dead-letter-routing-key",env.getProperty("mq.kill.item.success.kill.dead.routing.key"));
+        //绑定死信路由
+        //argsMap.put("x-dead-letter-routing-key",env.getProperty("mq.kill.item.success.kill.dead.routing.key"));
+        //绑定TTL-存活参数,在这里在暂时不设置，一会动态设置
+        //argsMap.put("x-message-ttl",10000);
+        return new Queue(env.getProperty("mq.kill.item.success.kill.dead.queue"),true,false,false,argsMap);
+    }
+
+    //创建基本交换机
+    @Bean
+    public  TopicExchange successKillDeadProdExchange(){
+        return new TopicExchange(env.getProperty("mq.kill.item.success.kill.dead.prod.exchange"),true,false);
+    }
+
+    //创建基本交换机+基本路由->死信队列的绑定
+    @Bean
+    public Binding suceessKillDeadProdBinding(){
+        return BindingBuilder.bind(successKillDeadQueue()).to(successKillDeadProdExchange()).with(env.getProperty("mq.kill.item.success.kill.dead.prod.routing.key"));
+    }
+
+    //创建真实队列
+    @Bean
+    public Queue successKillRealQueue(){
+        return  new Queue(env.getProperty("mq.kill.item.success.kill.dead.real.queue"),true);
+    }
+
+    //构建死信交换机模型
+    @Bean
+    public  TopicExchange successKillDeadExchange(){
+        return new TopicExchange(env.getProperty("mq.kill.item.success.kill.dead.exchange"),true,false);
+    }
+
+    //死信交换机+死信路由->真正队列 的绑定
+    @Bean
+    public Binding successKillDeadBinding(){
+        return BindingBuilder.bind(successKillRealQueue()).to(successKillDeadExchange()).with(env.getProperty("mq.kill.item.success.kill.dead.routing.key"));
+    }
+
+
+
+
+
+
+
 }
+

@@ -8,8 +8,8 @@ import seu.hy.killmall.mapper.ItemKillMapper;
 import seu.hy.killmall.mapper.ItemKillSuccessMapper;
 import seu.hy.killmall.pojo.ItemKill;
 import seu.hy.killmall.pojo.ItemKillSuccess;
-import seu.hy.killmall.service.EmailSenderService;
 import seu.hy.killmall.service.KillService;
+import seu.hy.killmall.service.RabbitmqSenderService;
 import seu.hy.killmall.utils.SnowFlake;
 
 @Service
@@ -22,7 +22,7 @@ public class KillServiceImpl implements KillService {
     private ItemKillMapper itemKillMapper;
 
     @Autowired
-    private EmailSenderService emailSenderService;
+    private RabbitmqSenderService rabbitmqSenderService;
 
     SnowFlake snowFlake=new SnowFlake(2,3);
 
@@ -65,7 +65,10 @@ public class KillServiceImpl implements KillService {
         System.out.println(entry);
         int res = itemKillSuccessMapper.insertSelective(entry);
         if(res>0){
-            emailSenderService.senderKillSuccessEmail(orderNo);
+            //经行异步邮件消息的通知 rabbitmq+mail
+            rabbitmqSenderService.senderKillSuccessEmail(orderNo);
+            //入死信队列，用于 “失效” 超过指定的TTL时间时仍然未支付的订单
+            rabbitmqSenderService.senderKillSuccessOrderExpireMsg(orderNo);
         }
     }
 
