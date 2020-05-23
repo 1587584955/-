@@ -2,6 +2,7 @@ package seu.hy.killmall.service;
 
 
 import seu.hy.killmall.pojo.ItemKill;
+import seu.hy.killmall.pojo.KillSuccessUserInfo;
 
 import java.util.List;
 
@@ -13,4 +14,6 @@ public interface IItemService {
     List<ItemKill> getKillItems() throws Exception;
 
     ItemKill getKillDetail(Integer id) throws Exception;
+
+    KillSuccessUserInfo getOrderDetail(String id);
 }

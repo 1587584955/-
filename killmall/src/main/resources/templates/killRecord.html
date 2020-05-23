@@ -1,0 +1,54 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>商城高并发抢购-抢购成功商品详情页面</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <script src="static/jquery/jquery-3.3.1.min.js" ></script>
+    <link rel="stylesheet" href="css/bootstrap.min.css" >
+    <link rel="stylesheet" href="css/bootstrap-theme.min.css" >
+    <script  src="static/js/bootstrap.min.js" type="text/javascript"></script>
+
+</head>
+<body>
+<div class="container">
+    <div class="panel panel-default">
+        <div class="panel-body">
+            <h2>当前用户名：</h2><h2 class="text-danger" th:text="${orderDetail.userName}"></h2>
+        </div>
+        <div class="panel-body">
+            <h2>抢购的商品名称：</h2><h2 class="text-danger " th:text="${orderDetail.itemName}"></h2>
+        </div>
+        <div class="panel-body">
+            <h2>订单编号：</h2><h2 class="text-danger" th:text="${orderDetail.code}"></h2>
+        </div>
+        <div class="panel-body">
+            <h2>成功抢购的时间：</h2><h2 class="text-danger" th:text="${#dates.format(orderDetail.createTime,'yyyy-MM-dd HH:mm:ss')}"></h2>
+        </div>
+        <div class="panel-body">
+            <h2>当前支付的状态：</h2>
+            <h2 class="text-danger" th:if="${orderDetail.status==1}">
+                已成功付款
+            </h2>
+            <h2 class="text-danger" th:if="${orderDetail.status==-1}">
+                订单已超时失效
+            </h2>
+            <h2 class="text-danger" th:if="${orderDetail.status==0}">
+                订单尚未付款
+            </h2>
+            <h2 class="text-danger" th:if="${orderDetail.status==2}">
+                订单已取消
+            </h2>
+        </div>
+    </div>
+    <table>
+        <tr>
+            <td><strong><input type="button" value="点击生成二维码进行支付" style="font-size: 30px;width: 1100px;height: auto;background-color: #28a4c9;"
+                               onclick="alert('功能尚未实现')"/></strong></td>
+        </tr>
+    </table>
+</div>
+
+
+</body>
+
+</html>
